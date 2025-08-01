@@ -17,13 +17,8 @@ export default async function page() {
         theme3: () => import('@/components/theme3/Auth/ForgotPassword'),
     };
 
-    const [AuthImgeMod, ForgetPasswordMod] = await Promise.all([
-        AuthImgeMap[theme](),
-        ForgetPasswordMap[theme](),
-    ]);
-
-    const AuthImge = AuthImgeMod.default;
-    const ForgetPassword = ForgetPasswordMod.default;
+    const AuthImge = (await AuthImgeMap[theme]())?.default;
+    const ForgetPassword = (await ForgetPasswordMap[theme]())?.default;
 
     return (
         <>

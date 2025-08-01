@@ -1,14 +1,5 @@
-// "use client";
 import { cookies } from 'next/headers';
-
-// import CallToAction from '@/components/call-to-action/CallToAction'
-// import LatestProducts from '@/components/Products/LatestProducts'
-// import ProductDetails from '@/components/Products/ProductDetails'
-// import SimilarProducts from '@/components/Products/SimilarProducts'
 import React from 'react'
-// import { getProductBySlug } from '@/lib/Products/ProductDetails';
-
-// import { useParams } from 'next/navigation';
 
 export default async function Page() {
 

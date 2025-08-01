@@ -120,6 +120,7 @@ export default function ProductDetailPage() {
   return (
     <div className="px-4 xl:px-12 mx-auto pt-24 ">
 
+      <Breadcrumb category={product.category} productName={product.name} />
 
       <main className="grid md:grid-cols-2 gap-10 items-center">
         {/* LEFT IMAGE BLOCK */}
