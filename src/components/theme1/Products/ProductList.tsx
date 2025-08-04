@@ -1,12 +1,10 @@
-// app/products/page.tsx
 'use client'
 
-import { useState, useEffect, } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Slider } from '@/components/ui/slider'
 import { getProducts } from '@/lib/Products/ProductList'
-// import { filtersData } from "@/lib/Products/filters";
 import { Sheet, SheetHeader, SheetTitle, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 // Types
@@ -38,6 +36,7 @@ export default function ProductsPage() {
   const [showMoreSizes, setShowMoreSizes] = useState(false)
   const [showMoreCategories, setShowMoreCategories] = useState(false)
   const [showMoreBrands, setShowMoreBrands] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(false) // New state for Sheet open/close
 
   // Initial state for filters
   const initialFilters = {
@@ -55,7 +54,7 @@ export default function ProductsPage() {
   const [appliedFilters, setAppliedFilters] = useState<Filters>(initialFilters)
 
   // Extract filter data from filtersData or use defaults
-  const categories = ['T-Shirts', 'Hoodies', 'Jeans', 'Sneakers', 'Accessories'];
+  const categories = ['T-Shirts', 'Hoodies', 'Jeans', 'Sneakers', 'Accessories']
   const brands = ['Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour']
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34']
   const colors = [
@@ -89,8 +88,6 @@ export default function ProductsPage() {
   // Handler to update selected filters in the UI
   const handleFilterChange = (type: keyof Omit<Filters, 'priceRange'>, value: string) => {
     setSelectedFilters(prev => {
-
-
       // Remove "All" if it exists when selecting specific items
       const currentFilters = prev[type].filter(item => item !== 'All' && item !== 'all')
 
@@ -117,9 +114,10 @@ export default function ProductsPage() {
     setAppliedFilters(initialFilters)
   }
 
-  // Applies the selected filters
+  // Applies the selected filters and closes the sheet
   const applyFilters = () => {
     setAppliedFilters(selectedFilters)
+    setIsSheetOpen(false) // Close the sheet
   }
 
   // Checks if any filters are active
@@ -257,8 +255,8 @@ export default function ProductsPage() {
         <div className="flex flex-wrap gap-2">
           {colors.slice(0, showMoreColors ? colors.length : 4).map((color: string | { value: string; name?: string }, index: number) => {
             // Handle both string and object formats
-            const colorValue = typeof color === 'string' ? color : color.value;
-            const colorName = typeof color === 'string' ? color : (color.name || color.value);
+            const colorValue = typeof color === 'string' ? color : color.value
+            const colorName = typeof color === 'string' ? color : (color.name || color.value)
 
             return (
               <button
@@ -271,7 +269,7 @@ export default function ProductsPage() {
               >
                 {colorName}
               </button>
-            );
+            )
           })}
         </div>
         {colors.length > 5 && (
@@ -320,16 +318,23 @@ export default function ProductsPage() {
 
           {/* Mobile Filters Sheet */}
           <div className="block lg:hidden">
-            <Sheet>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
-                <button className="w-full px-4 py-3 border border-[#515151] rounded text-sm font-medium hover:border-black transition-colors">
+                <div className="w-full px-4 py-3 border border-[#515151] rounded text-sm font-medium hover:border-black transition-colors">
                   <div className="flex items-center justify-between">
                     <span className="text-xl font-[outfit] font-black">FILTERS</span>
-                    <span className="text-sm">
-                      {hasActiveFilters() && `(${selectedFilters.categories.length + selectedFilters.brands.length + selectedFilters.sizes.length + selectedFilters.colors.length} active)`}
-                    </span>
+                    <button
+                      onClick={resetFilters}
+                      disabled={!hasActiveFilters()}
+                      className={`py-2 px-4 border border-gray-400 rounded font-semibold text-sm ${hasActiveFilters()
+                        ? 'hover:bg-gray-50 cursor-pointer'
+                        : 'opacity-50 cursor-not-allowed'
+                        }`}
+                    >
+                      RESET
+                    </button>
                   </div>
-                </button>
+                </div>
               </SheetTrigger>
 
               <SheetContent side="bottom" className="h-[93vh] overflow-y-auto p-4 border-t bg-white">
@@ -403,7 +408,7 @@ export default function ProductsPage() {
               <div className="grid grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
                 {products.map(product => (
                   <Link key={product.id} href={`/products/${product.id}`}>
-                    <div className="bg-white rounded-lg overflow-hidden ">
+                    <div className="bg-white rounded-lg overflow-hidden">
                       <div className="aspect-square bg-gray-100 relative overflow-hidden">
                         <Image
                           src={product.image || ''}

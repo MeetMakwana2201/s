@@ -34,27 +34,21 @@ export default async function page() {
         theme3: () => import('@/components/theme3/Products/LatestProducts'),
     };
 
+    const BreadcrumbMap = {
+        theme1: () => import('@/components/theme1/Breadcrumb/Breadcrumb'),
+        theme2: () => import('@/components/theme2/Breadcrumb/Breadcrumb'),
+        theme3: () => import('@/components/theme3/Breadcrumb/Breadcrumb'),
+    };
+
     const OfferPoster = (await OfferPosterMap[theme]())?.default;
     const ProductList = (await ProductListMap[theme]())?.default;
     const CallToAction = (await CallToActionMap[theme]())?.default;
     const LatestProducts = (await LatestProductsMap[theme]())?.default;
-
-    // const OfferPoster = (await OfferPosterMap[theme]())?.default;
-    // const ProductList = (await ProductListMap[theme]())?.default;
-    // const CallToAction = (await CallToActionMap[theme]())?.default;
-    // const LatestProducts = (await LatestProductsMap[theme]())?.default;
-
-    // const theme = (await cookies()).get('theme')?.value || 'default';
-
-    // // Dynamically import each themed component
-    // const OfferPoster = (await import(`@/components/${theme}/Offer/Offer-Poster`)).default;
-    // const ProductList = (await import(`@/components/${theme}/Products/ProductList`)).default;
-    // const CallToAction = (await import(`@/components/${theme}/call-to-action/CallToAction`)).default;
-    // const LatestProducts = (await import(`@/components/${theme}/Products/LatestProducts`)).default;
-
+    const Breadcrumb = (await BreadcrumbMap[theme]())?.default;
 
     return (
         <>
+            <Breadcrumb page="Black Friday Sale" />
             <OfferPoster />
             <ProductList />
             <CallToAction />
