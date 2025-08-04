@@ -124,8 +124,8 @@ export default function ProductDetailPage() {
     setSelectedSize(size);
   };
 
-  console.log(product);
-  console.log(selectedImage);
+  // console.log(product);
+  // console.log(selectedImage);
 
   if (!product || !selectedImage) {
     return <p className="text-center text-muted-foreground">Loading product...</p>;
@@ -137,9 +137,9 @@ export default function ProductDetailPage() {
       <Breadcrumb category={product.category} productName={product.name} />
 
 
-      <main className="grid md:grid-cols-2 gap-10 items-center">
+      <main className="grid lg:grid-cols-2 gap-10 items-center w-full">
         {/* LEFT IMAGE BLOCK */}
-        <div>
+        <div className="w-full">
           {/* Main Image */}
           <div className="relative w-full aspect-square mb-4">
             <Image
@@ -194,7 +194,7 @@ export default function ProductDetailPage() {
           {/* COLORS */}
           <div>
             <p className="font-extrabold mb-2 text-xl font-[outfit]">Colors</p>
-            <div className="flex gap-4 mt-4">
+            <div className="flex gap-4 mt-4 flex-wrap">
               {product.colors.map((color) => (
                 <button
                   key={color.name}
@@ -270,12 +270,12 @@ export default function ProductDetailPage() {
           </div>
 
           { /* add for look like center */}
-          <div className='h-25'>
+          <div className='h-25 lg:block hidden'>
 
           </div>
         </div>
       </main>
-      <div className="mt-20">
+      <div className="lg:mt-20">
         <h2 className="text-2xl lg:text-4xl font-[outfit] font-bold mb-6 uppercase">Product Description</h2>
         <p>
           {product.description}

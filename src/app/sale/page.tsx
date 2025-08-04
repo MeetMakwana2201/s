@@ -17,9 +17,9 @@ export default async function page() {
     };
 
     const ProductListMap = {
-        theme1: () => import('@/components/theme1/Products/SimilarProducts'),
-        theme2: () => import('@/components/theme2/Products/SimilarProducts'),
-        theme3: () => import('@/components/theme3/Products/SimilarProducts'),
+        theme1: () => import('@/components/theme1/Products/ProductList'),
+        theme2: () => import('@/components/theme2/Products/ProductList'),
+        theme3: () => import('@/components/theme3/Products/ProductList'),
     };
 
     const CallToActionMap = {
