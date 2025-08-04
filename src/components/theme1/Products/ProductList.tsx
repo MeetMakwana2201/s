@@ -337,7 +337,7 @@ export default function ProductsPage() {
                 </div>
               </SheetTrigger>
 
-              <SheetContent side="bottom" className="h-[93vh] overflow-y-auto p-4 border-t bg-white">
+              <SheetContent side="bottom" className="h-[90svh] overflow-y-auto overflow-x-hidden p-4 border-t bg-white">
                 <SheetHeader className="pb-4">
                   <SheetTitle className="text-3xl font-[outfit] font-black text-left">FILTERS</SheetTitle>
                 </SheetHeader>

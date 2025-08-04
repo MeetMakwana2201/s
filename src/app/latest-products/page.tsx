@@ -40,7 +40,7 @@ export default async function page() {
     return (
         <div>
             <Breadcrumb page="Latest Products" />
-            <h1 className='font-[Outfit] font-black text-3xl lg:px-12.5 px-3 '>our latest products</h1>
+            <h1 className='font-[Outfit] font-black text-xl lg:text-3xl lg:px-12.5 px-3 uppercase'>Our latest products</h1>
             <ProductList />
             <CallToAction />
             <BestSellerProducts />

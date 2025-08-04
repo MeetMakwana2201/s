@@ -10,10 +10,10 @@ export default async function page() {
     type ThemeKey = 'theme1' | 'theme2' | 'theme3';
     const theme = ((await cookies()).get('theme')?.value as ThemeKey) || 'default';
 
-    const BestSellerProductsMap = {
-        theme1: () => import('@/components/theme1/Products/BestSellerProducts'),
-        theme2: () => import('@/components/theme2/Products/BestSellerProducts'),
-        theme3: () => import('@/components/theme3/Products/BestSellerProducts'),
+    const LatestProductsMap = {
+        theme1: () => import('@/components/theme1/Products/LatestProducts'),
+        theme2: () => import('@/components/theme2/Products/LatestProducts'),
+        theme3: () => import('@/components/theme3/Products/LatestProducts'),
     };
     const ProductListMap = {
         theme1: () => import('@/components/theme1/Products/ProductList'),
@@ -33,18 +33,17 @@ export default async function page() {
         theme3: () => import('@/components/theme3/Breadcrumb/Breadcrumb'),
     };
 
-    const BestSellerProducts = (await BestSellerProductsMap[theme]())?.default;
+    const LatestProducts = (await LatestProductsMap[theme]())?.default;
     const ProductList = (await ProductListMap[theme]())?.default;
     const CallToAction = (await CallToActionMap[theme]())?.default;
     const Breadcrumb = (await BreadcrumbMap[theme]())?.default;
     return (
         <>
             <Breadcrumb page="Best Seller" />
-
-            <h1>LatestProducts</h1>
+            <h1 className='font-[Outfit] font-black text-xl lg:text-3xl lg:px-12.5 px-3 uppercase'>best seller products</h1>
             <ProductList />
             <CallToAction />
-            <BestSellerProducts />
+            <LatestProducts />
         </>
 
     )
