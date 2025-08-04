@@ -1,7 +1,7 @@
 // app/products/page.tsx
 'use client'
 
-import { useState, useEffect,} from 'react'
+import { useState, useEffect, } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Slider } from '@/components/ui/slider'
@@ -39,20 +39,26 @@ export default function ProductsPage() {
   const [showMoreCategories, setShowMoreCategories] = useState(false)
   const [showMoreBrands, setShowMoreBrands] = useState(false)
 
-  const [filters, setFilters] = useState<Filters>({
-    priceRange: [10, 50],
+  // Initial state for filters
+  const initialFilters = {
+    priceRange: [10, 50] as [number, number],
     categories: [],
     brands: [],
     sizes: [],
     colors: []
-  })
+  }
+
+  // State for filters the user is currently selecting in the UI
+  const [selectedFilters, setSelectedFilters] = useState<Filters>(initialFilters)
+
+  // State for filters that are actually applied to fetch products
+  const [appliedFilters, setAppliedFilters] = useState<Filters>(initialFilters)
 
   // Extract filter data from filtersData or use defaults
-  const categories = ['All', 'T-Shirts', 'Hoodies', 'Jeans', 'Sneakers', 'Accessories'];
-  const brands = ['All', 'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour']
-  const sizes = ['All', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34']
+  const categories = ['T-Shirts', 'Hoodies', 'Jeans', 'Sneakers', 'Accessories'];
+  const brands = ['Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour']
+  const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34']
   const colors = [
-    { name: 'All', value: 'all' },
     { name: 'Black', value: 'black' },
     { name: 'White', value: 'white' },
     { name: 'Red', value: 'red' },
@@ -61,13 +67,13 @@ export default function ProductsPage() {
     { name: 'Gray', value: 'gray' }
   ]
 
-  // Fetch products when filters change
+  // Fetch products when appliedFilters change
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true)
         setError(null)
-        const data = await getProducts(filters)
+        const data = await getProducts(appliedFilters)
         setProducts(data)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch products')
@@ -78,21 +84,16 @@ export default function ProductsPage() {
     }
 
     fetchProducts()
-  }, [filters])
+  }, [appliedFilters])
 
+  // Handler to update selected filters in the UI
   const handleFilterChange = (type: keyof Omit<Filters, 'priceRange'>, value: string) => {
-    setFilters(prev => {
-      // Handle "All" selection
-      if (value === 'All' || value === 'all') {
-        return {
-          ...prev,
-          [type]: [] // Clear all selections when "All" is selected
-        }
-      }
-      
+    setSelectedFilters(prev => {
+
+
       // Remove "All" if it exists when selecting specific items
       const currentFilters = prev[type].filter(item => item !== 'All' && item !== 'all')
-      
+
       return {
         ...prev,
         [type]: currentFilters.includes(value)
@@ -102,45 +103,40 @@ export default function ProductsPage() {
     })
   }
 
+  // Handler to update selected price range in the UI
   const handlePriceChange = (value: number[]) => {
-    setFilters(prev => ({
+    setSelectedFilters(prev => ({
       ...prev,
-      priceRange: [value[0], value[1]]
+      priceRange: [value[0], value[1]] as [number, number]
     }))
   }
 
+  // Resets both selected and applied filters
   const resetFilters = () => {
-    setFilters({
-      priceRange: [10, 50],
-      categories: [],
-      brands: [],
-      sizes: [],
-      colors: []
-    })
+    setSelectedFilters(initialFilters)
+    setAppliedFilters(initialFilters)
   }
 
+  // Applies the selected filters
   const applyFilters = () => {
-    // Filters are automatically applied through useEffect
-    // This could be used for manual apply if needed
-    console.log('Current filters applied:', filters)
+    setAppliedFilters(selectedFilters)
   }
 
+  // Checks if any filters are active
   const hasActiveFilters = () => {
     return (
-      filters.categories.length > 0 ||
-      filters.brands.length > 0 ||
-      filters.sizes.length > 0 ||
-      filters.colors.length > 0 ||
-      filters.priceRange[0] !== 10 ||
-      filters.priceRange[1] !== 50
+      selectedFilters.categories.length > 0 ||
+      selectedFilters.brands.length > 0 ||
+      selectedFilters.sizes.length > 0 ||
+      selectedFilters.colors.length > 0 ||
+      selectedFilters.priceRange[0] !== 10 ||
+      selectedFilters.priceRange[1] !== 50
     )
   }
 
+  // Checks if a specific filter is active in the selected state
   const isFilterActive = (type: keyof Omit<Filters, 'priceRange'>, value: string) => {
-    if (value === 'All' || value === 'all') {
-      return filters[type].length === 0
-    }
-    return filters[type].includes(value)
+    return selectedFilters[type].includes(value)
   }
 
   const FilterContent = () => (
@@ -152,19 +148,19 @@ export default function ProductsPage() {
           {/* Absolute price labels */}
           <span
             className="absolute -top-2 text-sm text-gray-600"
-            style={{ left: `${(filters.priceRange[0] / 100) * 100 + 2}%`, transform: 'translateX(-50%)' }}
+            style={{ left: `${(selectedFilters.priceRange[0] / 100) * 100 + 2}%`, transform: 'translateX(-50%)' }}
           >
-            ${filters.priceRange[0]}.00
+            ${selectedFilters.priceRange[0]}.00
           </span>
           <span
             className="absolute -top-2 text-sm text-gray-600"
-            style={{ left: `${(filters.priceRange[1] / 100) * 100}%`, transform: 'translateX(-50%)' }}
+            style={{ left: `${(selectedFilters.priceRange[1] / 100) * 100}%`, transform: 'translateX(-50%)' }}
           >
-            ${filters.priceRange[1]}.00
+            ${selectedFilters.priceRange[1]}.00
           </span>
 
           <Slider
-            value={filters.priceRange}
+            value={selectedFilters.priceRange}
             onValueChange={handlePriceChange}
             max={100}
             min={0}
@@ -191,7 +187,7 @@ export default function ProductsPage() {
             </button>
           ))}
         </div>
-        {categories.length > 3 && (
+        {categories.length > 5 && (
           <button
             onClick={() => setShowMoreCategories(!showMoreCategories)}
             className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
@@ -218,7 +214,7 @@ export default function ProductsPage() {
             </button>
           ))}
         </div>
-        {brands.length > 3 && (
+        {brands.length > 5 && (
           <button
             onClick={() => setShowMoreBrands(!showMoreBrands)}
             className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
@@ -245,7 +241,7 @@ export default function ProductsPage() {
             </button>
           ))}
         </div>
-        {sizes.length > 3 && (
+        {sizes.length > 5 && (
           <button
             onClick={() => setShowMoreSizes(!showMoreSizes)}
             className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
@@ -278,7 +274,7 @@ export default function ProductsPage() {
             );
           })}
         </div>
-        {colors.length > 3 && (
+        {colors.length > 5 && (
           <button
             onClick={() => setShowMoreColors(!showMoreColors)}
             className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
@@ -330,7 +326,7 @@ export default function ProductsPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-xl font-[outfit] font-black">FILTERS</span>
                     <span className="text-sm">
-                      {hasActiveFilters() && `(${filters.categories.length + filters.brands.length + filters.sizes.length + filters.colors.length} active)`}
+                      {hasActiveFilters() && `(${selectedFilters.categories.length + selectedFilters.brands.length + selectedFilters.sizes.length + selectedFilters.colors.length} active)`}
                     </span>
                   </div>
                 </button>
@@ -407,13 +403,13 @@ export default function ProductsPage() {
               <div className="grid grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
                 {products.map(product => (
                   <Link key={product.id} href={`/products/${product.id}`}>
-                    <div className="bg-white rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
+                    <div className="bg-white rounded-lg overflow-hidden ">
                       <div className="aspect-square bg-gray-100 relative overflow-hidden">
                         <Image
                           src={product.image || ''}
                           alt={product.name}
                           fill
-                          className="object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                          className="object-cover rounded-lg"
                         />
                       </div>
                       <div className="py-4">
