@@ -29,15 +29,21 @@ export default async function page() {
         theme2: () => import('@/components/theme2/Products/ProductList'),
         theme3: () => import('@/components/theme3/Products/ProductList'),
     };
-
+    const BreadcrumbMap = {
+        theme1: () => import('@/components/theme1/Breadcrumb/Breadcrumb'),
+        theme2: () => import('@/components/theme2/Breadcrumb/Breadcrumb'),
+        theme3: () => import('@/components/theme3/Breadcrumb/Breadcrumb'),
+    };
 
     const CallToAction = (await CallToActionMap[theme]())?.default;
     const CategoriesDetails = (await CategoriesDetailsMap[theme]())?.default;
     const LatestProducts = (await LatestProductsMap[theme]())?.default;
     const ProductList = (await ProductListMap[theme]())?.default;
+    const Breadcrumb = (await BreadcrumbMap[theme]())?.default;
 
     return (
         <>
+            <Breadcrumb page="Catogary 1" />
             <CategoriesDetails />
             <ProductList />
             <CallToAction />
