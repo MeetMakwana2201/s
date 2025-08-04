@@ -1,15 +1,13 @@
 // app/products/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect,} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Slider } from '@/components/ui/slider'
 import { getProducts } from '@/lib/Products/ProductList'
-import { filtersData } from "@/lib/Products/filters";
+// import { filtersData } from "@/lib/Products/filters";
 import { Sheet, SheetHeader, SheetTitle, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-// import ExpandableFilter from "@/components/theme1/Products/ExpandableFilter";
-// import { cookies } from 'next/headers';
 
 // Types
 interface Product {
@@ -31,31 +29,15 @@ interface Filters {
   sizes: string[]
   colors: string[]
 }
-interface ExpandableFilterProps {
-  title: string;
-  children: React.ReactNode;
-}
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  type ThemeKey = 'theme1' | 'theme2' | 'theme3';
-
-  const [ExpandableFilter, setExpandableFilter] = useState<React.ComponentType<ExpandableFilterProps> | null>(null);
-
-  useEffect(() => {
-    const theme = (document.cookie.match(/theme=([^;]+)/)?.[1] as ThemeKey) || 'theme1';
-    const ExpandableFilterMap = {
-      theme1: () => import('@/components/theme1/Products/ExpandableFilter'),
-      theme2: () => import('@/components/theme2/Products/ExpandableFilter'),
-      theme3: () => import('@/components/theme3/Products/ExpandableFilter'),
-    };
-    ExpandableFilterMap[theme]().then((mod) => {
-      setExpandableFilter(mod.default);
-    });
-  }, []);
+  const [showMoreColors, setShowMoreColors] = useState(false)
+  const [showMoreSizes, setShowMoreSizes] = useState(false)
+  const [showMoreCategories, setShowMoreCategories] = useState(false)
+  const [showMoreBrands, setShowMoreBrands] = useState(false)
 
   const [filters, setFilters] = useState<Filters>({
     priceRange: [10, 50],
@@ -65,8 +47,19 @@ export default function ProductsPage() {
     colors: []
   })
 
-  // const [showMoreColors, setShowMoreColors] = useState(false)
-  // const [showMoreSizes, setShowMoreSizes] = useState(false)
+  // Extract filter data from filtersData or use defaults
+  const categories = ['All', 'T-Shirts', 'Hoodies', 'Jeans', 'Sneakers', 'Accessories'];
+  const brands = ['All', 'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour']
+  const sizes = ['All', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34']
+  const colors = [
+    { name: 'All', value: 'all' },
+    { name: 'Black', value: 'black' },
+    { name: 'White', value: 'white' },
+    { name: 'Red', value: 'red' },
+    { name: 'Blue', value: 'blue' },
+    { name: 'Green', value: 'green' },
+    { name: 'Gray', value: 'gray' }
+  ]
 
   // Fetch products when filters change
   useEffect(() => {
@@ -88,12 +81,25 @@ export default function ProductsPage() {
   }, [filters])
 
   const handleFilterChange = (type: keyof Omit<Filters, 'priceRange'>, value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [type]: prev[type].includes(value)
-        ? prev[type].filter(item => item !== value)
-        : [...prev[type], value]
-    }))
+    setFilters(prev => {
+      // Handle "All" selection
+      if (value === 'All' || value === 'all') {
+        return {
+          ...prev,
+          [type]: [] // Clear all selections when "All" is selected
+        }
+      }
+      
+      // Remove "All" if it exists when selecting specific items
+      const currentFilters = prev[type].filter(item => item !== 'All' && item !== 'all')
+      
+      return {
+        ...prev,
+        [type]: currentFilters.includes(value)
+          ? currentFilters.filter(item => item !== value)
+          : [...currentFilters, value]
+      }
+    })
   }
 
   const handlePriceChange = (value: number[]) => {
@@ -130,13 +136,167 @@ export default function ProductsPage() {
     )
   }
 
+  const isFilterActive = (type: keyof Omit<Filters, 'priceRange'>, value: string) => {
+    if (value === 'All' || value === 'all') {
+      return filters[type].length === 0
+    }
+    return filters[type].includes(value)
+  }
+
+  const FilterContent = () => (
+    <>
+      {/* Price Range */}
+      <div className="mb-6">
+        <h3 className="font-[outfit] font-black text-xl mb-3">PRICE</h3>
+        <div className="relative px-2 pt-5">
+          {/* Absolute price labels */}
+          <span
+            className="absolute -top-2 text-sm text-gray-600"
+            style={{ left: `${(filters.priceRange[0] / 100) * 100 + 2}%`, transform: 'translateX(-50%)' }}
+          >
+            ${filters.priceRange[0]}.00
+          </span>
+          <span
+            className="absolute -top-2 text-sm text-gray-600"
+            style={{ left: `${(filters.priceRange[1] / 100) * 100}%`, transform: 'translateX(-50%)' }}
+          >
+            ${filters.priceRange[1]}.00
+          </span>
+
+          <Slider
+            value={filters.priceRange}
+            onValueChange={handlePriceChange}
+            max={100}
+            min={0}
+            step={5}
+            className="w-full"
+          />
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="mb-6">
+        <h3 className="font-[outfit] font-black text-xl mb-3">CATEGORIES</h3>
+        <div className="flex flex-wrap gap-2">
+          {categories.slice(0, showMoreCategories ? categories.length : 4).map((category: string) => (
+            <button
+              key={category}
+              onClick={() => handleFilterChange('categories', category)}
+              className={`p-3 text-sm border rounded transition-colors ${isFilterActive('categories', category)
+                ? ' text-black border-black font-semibold'
+                : 'border-[#515151] text-[#515151] hover:border-black font-medium'
+                }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+        {categories.length > 3 && (
+          <button
+            onClick={() => setShowMoreCategories(!showMoreCategories)}
+            className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
+          >
+            {showMoreCategories ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </div>
+
+      {/* Brand Selection */}
+      <div className="mb-6">
+        <h3 className="font-[outfit] font-black text-xl mb-3">BRAND SELECTION</h3>
+        <div className="flex flex-wrap gap-2">
+          {brands.slice(0, showMoreBrands ? brands.length : 4).map((brand, index) => (
+            <button
+              key={index}
+              onClick={() => handleFilterChange('brands', brand)}
+              className={`p-3 text-sm border rounded transition-colors ${isFilterActive('brands', brand)
+                ? 'text-black border-black font-semibold'
+                : 'border-[#515151] text-[#515151] hover:border-black font-medium'
+                }`}
+            >
+              {brand}
+            </button>
+          ))}
+        </div>
+        {brands.length > 3 && (
+          <button
+            onClick={() => setShowMoreBrands(!showMoreBrands)}
+            className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
+          >
+            {showMoreBrands ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </div>
+
+      {/* Sizes */}
+      <div className="mb-6">
+        <h3 className="font-[outfit] font-black text-xl mb-3">SIZES</h3>
+        <div className="flex flex-wrap gap-2">
+          {sizes.slice(0, showMoreSizes ? sizes.length : 4).map(size => (
+            <button
+              key={size}
+              onClick={() => handleFilterChange('sizes', size)}
+              className={`p-3 text-sm border rounded transition-colors ${isFilterActive('sizes', size)
+                ? 'text-black border-black font-semibold'
+                : 'border-[#515151] text-[#515151] hover:border-black font-medium'
+                }`}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+        {sizes.length > 3 && (
+          <button
+            onClick={() => setShowMoreSizes(!showMoreSizes)}
+            className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
+          >
+            {showMoreSizes ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </div>
+
+      {/* Colors */}
+      <div className="mb-6">
+        <h3 className="font-[outfit] font-black text-xl mb-3">COLORS</h3>
+        <div className="flex flex-wrap gap-2">
+          {colors.slice(0, showMoreColors ? colors.length : 4).map((color: string | { value: string; name?: string }, index: number) => {
+            // Handle both string and object formats
+            const colorValue = typeof color === 'string' ? color : color.value;
+            const colorName = typeof color === 'string' ? color : (color.name || color.value);
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleFilterChange('colors', colorValue)}
+                className={`p-3 text-sm border rounded transition-colors ${isFilterActive('colors', colorValue)
+                  ? 'text-black border-black font-semibold'
+                  : 'border-[#515151] text-[#515151] hover:border-black font-medium'
+                  }`}
+              >
+                {colorName}
+              </button>
+            );
+          })}
+        </div>
+        {colors.length > 3 && (
+          <button
+            onClick={() => setShowMoreColors(!showMoreColors)}
+            className="mt-2 text-center w-full underline text-base font-semibold transition-colors"
+          >
+            {showMoreColors ? 'View Less' : 'View More'}
+          </button>
+        )}
+      </div>
+    </>
+  )
+
   return (
     <div className="min-h-screen">
       <div className="lg:px-12.5 px-3 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:w-1/4">
-            <div className="bg-white rounded-lg lg:p-6 p-3 border border-[#515151]">
+          {/* Desktop Filters Sidebar */}
+          <div className="hidden lg:block lg:w-1/4">
+            <div className="bg-white rounded-lg p-6 border border-[#515151]">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-[outfit] font-black">FILTERS</h2>
                 <div className="flex gap-2">
@@ -158,255 +318,56 @@ export default function ProductsPage() {
                   </button>
                 </div>
               </div>
-
-              {/* Price Range */}
-              <div className="mb-6">
-                <h3 className="font-[outfit] font-black text-xl mb-3">PRICE</h3>
-                <div className="relative px-2 pt-5">
-                  {/* Absolute price labels */}
-                  <span
-                    className="absolute -top-2 text-sm text-gray-600"
-                    style={{ left: `${(filters.priceRange[0] / 100) * 100 + 2}%`, transform: 'translateX(-50%)' }}
-                  >
-                    ${filters.priceRange[0]}.00
-                  </span>
-                  <span
-                    className="absolute -top-2 text-sm text-gray-600"
-                    style={{ left: `${(filters.priceRange[1] / 100) * 100}%`, transform: 'translateX(-50%)' }}
-                  >
-                    ${filters.priceRange[1]}.00
-                  </span>
-
-
-                  <Slider
-                    value={filters.priceRange}
-                    onValueChange={handlePriceChange}
-                    max={100}
-                    min={0}
-                    step={5}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-
-              <div>
-                {ExpandableFilter &&
-                  filtersData.map((filter) => (
-                    <ExpandableFilter key={filter.key} title={filter.title}>
-                      {filter.key === "colors" ? (
-                        (filter.options as string[]).map((color: string) => (
-                          <div
-                            key={color}
-                            onClick={() => handleFilterChange(filter.key as keyof Omit<Filters, 'priceRange'>, color)}
-                            className="w-6 h-6 rounded-full border-2 cursor-pointer"
-                            style={{
-                              backgroundColor: color,
-                              borderColor: filters[filter.key as keyof Omit<Filters, 'priceRange'>]?.includes(color) ? "black" : "#ccc",
-                            }}
-                          />
-                        ))
-                      ) : (
-                        (filter.options as string[]).map((option: string) => (
-                          <button
-                            key={option}
-                            onClick={() => handleFilterChange(filter.key as keyof Omit<Filters, 'priceRange'>, option)}
-                            className={`p-3 text-sm border rounded transition-colors ${filters[filter.key as keyof Omit<Filters, 'priceRange'>]?.includes(option)
-                              ? "text-black border-black font-semibold"
-                              : "border-[#515151] text-[#515151] hover:border-black font-medium"
-                              }`}
-                          >
-                            {option}
-                          </button>
-                        ))
-                      )}
-                    </ExpandableFilter>
-                  ))}
-              </div>
-
-
-              {/* Categories */}
-              {/* <div className="mb-6">
-                <h3 className="font-[outfit] font-black text-xl mb-3">CATEGORIES</h3>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map(category => (
-                    <button
-                      key={category}
-                      onClick={() => handleFilterChange('categories', category)}
-                      className={`p-3 text-sm border rounded transition-colors ${filters.categories.includes(category)
-                        ? ' text-black border-black font-semibold'
-                        : 'border-[#515151] text-[#515151] hover:border-black font-medium'
-                        }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
-                </div>
-              </div> */}
-
-              {/* Brand Selection */}
-              {/* <div className="mb-6">
-                <h3 className="font-[outfit] font-black text-xl mb-3">BRAND SELECTION</h3>
-                <div className="flex flex-wrap gap-2">
-                  {brands.map((brand, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleFilterChange('brands', brand)}
-                      className={`p-3 text-sm border rounded transition-colors ${filters.brands.includes(brand)
-                        ? 'text-black border-black font-semibold'
-                        : 'border-[#515151] text-[#515151] hover:border-black font-medium'
-                        }`}
-                    >
-                      {brand}
-                    </button>
-                  ))}
-                </div>
-              </div> */}
-
-              {/* Sizes */}
-              {/* <div className="mb-6">
-                <h3 className="font-[outfit] font-black text-xl mb-3">SIZES</h3>
-                <div className="flex flex-wrap gap-2">
-                  {sizes.slice(0, showMoreSizes ? sizes.length : 5).map(size => (
-                    <button
-                      key={size}
-                      onClick={() => handleFilterChange('sizes', size)}
-                      className={`p-3 text-sm border rounded transition-colors ${filters.sizes.includes(size)
-                        ? 'text-black border-black font-semibold'
-                        : 'border-[#515151] text-[#515151] hover:border-black font-medium'
-                        }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-                {sizes.length > 5 && (
-                  <button
-                    onClick={() => setShowMoreSizes(!showMoreSizes)}
-                    className="mt-2 text-center w-full underline text-base font-semibold  transition-colors"
-                  >
-                    {showMoreSizes ? 'View Less' : 'View More'}
-                  </button>
-                )}
-              </div> */}
-
-              {/* Colors */}
-              {/* <div className="mb-6">
-                <h3 className="font-[outfit] font-black text-xl mb-3">COLORS</h3>
-                <div className="flex flex-wrap gap-2">
-                  {colors.slice(0, showMoreColors ? colors.length : 5).map(color => (
-                    <button
-                      key={color.value}
-                      onClick={() => handleFilterChange('colors', color.value)}
-                      className={`p-3 text-sm border rounded transition-colors ${filters.colors.includes(color.value)
-                        ? 'text-black border-black font-semibold'
-                        : 'border-[#515151] text-[#515151] hover:border-black font-medium'
-                        }`}
-                    >
-                      {color.name}
-                    </button>
-                  ))}
-                </div>
-                {colors.length > 5 && (
-                  <button
-                    onClick={() => setShowMoreColors(!showMoreColors)}
-                    className="mt-2 text-center w-full underline text-base font-semibold  transition-colors"
-                  >
-                    {showMoreColors ? 'View Less' : 'View More'}
-                  </button>
-                )}
-              </div> */}
+              <FilterContent />
             </div>
           </div>
-          {/* Filters responsive */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <div className="block lg:hidden px-4 py-2 border rounded text-sm font-medium">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-3xl font-[outfit] font-black">FILTERS</h2>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={resetFilters}
-                      disabled={!hasActiveFilters()}
-                      className={`px-3 py-1 text-sm border border-gray-300 rounded transition-colors ${hasActiveFilters()
-                        ? 'hover:bg-gray-50 cursor-pointer'
-                        : 'opacity-50 cursor-not-allowed'
-                        }`}
-                    >
-                      RESET
-                    </button>
-                    <button
-                      onClick={applyFilters}
-                      className="px-3 py-1 text-sm bg-black text-white rounded hover:bg-gray-800 transition-colors"
-                    >
-                      APPLY
-                    </button>
+
+          {/* Mobile Filters Sheet */}
+          <div className="block lg:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="w-full px-4 py-3 border border-[#515151] rounded text-sm font-medium hover:border-black transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xl font-[outfit] font-black">FILTERS</span>
+                    <span className="text-sm">
+                      {hasActiveFilters() && `(${filters.categories.length + filters.brands.length + filters.sizes.length + filters.colors.length} active)`}
+                    </span>
                   </div>
+                </button>
+              </SheetTrigger>
+
+              <SheetContent side="bottom" className="h-[93vh] overflow-y-auto p-4 border-t bg-white">
+                <SheetHeader className="pb-4">
+                  <SheetTitle className="text-3xl font-[outfit] font-black text-left">FILTERS</SheetTitle>
+                </SheetHeader>
+
+                <div className="pb-20">
+                  <FilterContent />
                 </div>
-              </div>
-            </SheetTrigger>
 
-            <SheetContent side="bottom" className="h-[93vh] overflow-y-auto p-4  border-t bg-white ">
-              <SheetHeader className="p-0">
-                <h2 className="text-3xl font-[outfit] font-black">FILTERS</h2>
-              </SheetHeader>
+                {/* Bottom Buttons */}
+                <div className="fixed bottom-4 left-4 right-4 flex gap-2 bg-white pt-4 border-t">
+                  <button
+                    onClick={resetFilters}
+                    disabled={!hasActiveFilters()}
+                    className={`flex-1 py-3 border border-gray-400 rounded font-semibold text-sm ${hasActiveFilters()
+                      ? 'hover:bg-gray-50 cursor-pointer'
+                      : 'opacity-50 cursor-not-allowed'
+                      }`}
+                  >
+                    RESET
+                  </button>
 
-              <div>
-                {ExpandableFilter &&
-                  filtersData.map((filter) => (
-                    <ExpandableFilter key={filter.key} title={filter.title}>
-                      {filter.key === "colors" ? (
-                        (filter.options as string[]).map((color: string) => (
-                          <div
-                            key={color}
-                            onClick={() => handleFilterChange(filter.key as keyof Omit<Filters, 'priceRange'>, color)}
-                            className="w-6 h-6 rounded-full border-2 cursor-pointer"
-                            style={{
-                              backgroundColor: color,
-                              borderColor: filters[filter.key as keyof Omit<Filters, 'priceRange'>]?.includes(color) ? "black" : "#ccc",
-                            }}
-                          />
-                        ))
-                      ) : (
-                        (filter.options as string[]).map((option: string) => (
-                          <button
-                            key={option}
-                            onClick={() => handleFilterChange(filter.key as keyof Omit<Filters, 'priceRange'>, option)}
-                            className={`p-3 text-sm border rounded transition-colors ${filters[filter.key as keyof Omit<Filters, 'priceRange'>]?.includes(option)
-                              ? "text-black border-black font-semibold"
-                              : "border-[#515151] text-[#515151] hover:border-black font-medium"
-                              }`}
-                          >
-                            {option}
-                          </button>
-                        ))
-                      )}
-                    </ExpandableFilter>
-                  ))}
-              </div>
-
-              {/* Bottom Buttons */}
-              <div className="flex justify-between gap-2 mt-6 bottom-4 absolute w-[90%]">
-                <button
-                  onClick={resetFilters}
-                  disabled={!hasActiveFilters()}
-                  className={`w-full py-2 border border-gray-400 rounded font-semibold text-sm ${hasActiveFilters()
-                    ? 'hover:bg-gray-50 cursor-pointer'
-                    : 'opacity-50 cursor-not-allowed'
-                    }`}
-                >
-                  RESET
-                </button>
-
-                <button
-                  onClick={applyFilters}
-                  className="w-full py-2 bg-black text-white rounded font-semibold text-sm hover:bg-gray-800"
-                >
-                  APPLY
-                </button>
-              </div>
-            </SheetContent>
-          </Sheet>
-
+                  <button
+                    onClick={applyFilters}
+                    className="flex-1 py-3 bg-black text-white rounded font-semibold text-sm hover:bg-gray-800"
+                  >
+                    APPLY
+                  </button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
 
           {/* Products Grid */}
           <div className="lg:w-3/4">
@@ -443,21 +404,21 @@ export default function ProductsPage() {
 
             {/* Products Grid */}
             {!loading && !error && (
-              <div className="grid grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3  gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
                 {products.map(product => (
                   <Link key={product.id} href={`/products/${product.id}`}>
-                    <div className="bg-white rounded-lg overflow-hidden transition-shadow">
+                    <div className="bg-white rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
                       <div className="aspect-square bg-gray-100 relative overflow-hidden">
                         <Image
                           src={product.image || ''}
                           alt={product.name}
                           fill
-                          className="object-cover rounded-lg"
+                          className="object-cover rounded-lg hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div className="py-4">
                         <p className="text-sm text-gray-500 mb-1">{product.brand}</p>
-                        <h3 className="font-medium mb-2">
+                        <h3 className="font-medium mb-2 line-clamp-2">
                           {product.name}
                         </h3>
                         <div className="flex items-center gap-2">
