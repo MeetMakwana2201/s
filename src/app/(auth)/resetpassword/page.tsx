@@ -23,9 +23,9 @@ export default async function page() {
     const ResetPassword = (await ResetPasswordMap[theme]())?.default;
 
     return (
-        <>
+        <div className="md:min-h-screen mb-4 mt-18 lg:mt-25 px-5 lg:px-9 grid md:grid-cols-2 gap-3 md:gap-0 items-center bg-white">
             <AuthImge />
             <ResetPassword />
-        </>
+        </div>
     )
 }
