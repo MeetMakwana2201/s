@@ -19,6 +19,7 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 import SearchResults from "./SearchResults";
+import { Categories } from "@/lib/categories/CategoriesList";
 
 export default function Header() {
     const [isSignIn, setIsSignIn] = useState(false);
@@ -52,7 +53,7 @@ export default function Header() {
                         </SheetHeader>
                         <div className="flex flex-col gap-4 px-4">
                             <Link
-                                href="#"
+                                href="/category"
                                 className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                             >
                                 Categories <ChevronRight className="h-4 w-4" />
@@ -104,13 +105,46 @@ export default function Header() {
 
                 {/* ===== Icons & Actions ===== */}
                 <div className="flex items-center gap-5">
-                    <Link
+                    {/* <Link
                         href="#"
                         className="text-sm font-medium text-black hover:text-[#1C2B76] lg:block hidden"
                     >
                         Categories
-                    </Link>
+                    </Link> */}
+                    <div className="relative group">
+                        <Link href="/category" className="lg:block hidden cursor-pointer text-[16px] font-medium">Categories</Link>
 
+                        <div className="magamanu absolute top-5 -right-20 w-[800px] xl:w-[1100px] mt-4 max-h-[50dvh] overflow-y-scroll scrollbar-track-red-200 bg-white rounded-xl shadow-xl p-6 pe-3 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                            <div className="flex items-center justify-between mb-4">
+                                <h4 className="text-xl font-[outfit] uppercase font-bold">Browse Categories</h4>
+                                <Link href="/category" className="text-sm text-[#515151] underline">
+                                    View More
+                                </Link>
+                            </div>
+                            <div className="grid grid-cols-6 gap-5">
+                                {Categories.map((cat) => (
+                                    <Link
+                                        key={cat.name}
+                                        href={`/category/${cat.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                        className="group  transition overflow-hidden"
+                                    >
+                                        <div className="w-full rounded-xl aspect-square overflow-hidden">
+                                            <Image
+                                                src={cat.image}
+                                                alt={cat.name}
+                                                width={150}
+                                                height={150}
+                                                className="object-cover w-full h-full transition-transform group-hover:scale-105"
+                                            />
+                                        </div>
+                                        <div className="text-center text-sm font-medium py-2">
+                                            {cat.name}
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                     {/* === Search Icon Toggle === */}
                     <button
                         aria-label="Search"

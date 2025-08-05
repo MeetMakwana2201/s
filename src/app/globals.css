@@ -123,3 +123,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+@layer utilities {
+  .magamanu::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .magamanu::-webkit-scrollbar-track {
+    background: #f4f4f4;
+    border-radius: 10px;
+  }
+
+  .magamanu::-webkit-scrollbar-thumb {
+    background-color: #FF5555;
+    border-radius: 10px;
+    border: 2px solid white;
+  }
+
+  .magamanu::-webkit-scrollbar-thumb:hover {
+    background-color: #e63946;
+  }
+
+  /* Optional for Firefox */
+  .magamanu {
+    scrollbar-width: thin;
+    scrollbar-color: #FF5555 #f4f4f4;
+  }
+}
