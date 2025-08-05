@@ -149,18 +149,21 @@ export default function CartSheet() {
                     ))}
                 </div>
 
-                <SheetFooter className="px-0 flex flex-row gap-4 sticky bottom-0 bg-white ">
+                <SheetFooter className="px-0 flex flex-row gap-4 sticky bottom-0 bg-white">
                     <SheetClose className="flex-1">
                         <div className="flex-1 w-full rounded-none border border-[#040404] px-4 py-1">
                             SHOP MORE
                         </div>
                     </SheetClose>
-                    <Link href="/checkout" className="flex-1 bg-black text-white hover:bg-black/90 text-center">
-                        <Button className="w-full">
-                            CHECKOUT
-                        </Button>
-                    </Link>
+                    <SheetClose asChild>
+                        <Link href="/checkout" className="flex-1 bg-black text-white hover:bg-black/90 text-center">
+                            <Button className="w-full cursor-pointer">
+                                CHECKOUT
+                            </Button>
+                        </Link>
+                    </SheetClose>
                 </SheetFooter>
+
             </SheetContent>
         </Sheet>
     );
