@@ -4,7 +4,6 @@ import {
     Menu,
     Search,
     User,
-    ShoppingCart,
     ChevronRight,
     X,
 } from "lucide-react";
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/sheet";
 import SearchResults from "./SearchResults";
 import { Categories } from "@/lib/categories/CategoriesList";
+import CartSheet from "../cart-checkout/Cart";
 
 export default function Header() {
     const [isSignIn, setIsSignIn] = useState(false);
@@ -98,7 +98,8 @@ export default function Header() {
                             src="/images/footer-logo.png"
                             alt="Logo"
                             width={250}
-                            height={80}
+                            height={81}
+                            priority={true}
                         />
                     </Link>
                 </div>
@@ -157,9 +158,7 @@ export default function Header() {
                         )}
                     </button>
 
-                    <button aria-label="Cart">
-                        <ShoppingCart className="h-5 w-5" />
-                    </button>
+                    <CartSheet />
 
                     <button aria-label="Account" className="lg:block hidden">
                         <User className="h-5 w-5" />
