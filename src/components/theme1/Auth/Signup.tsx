@@ -23,7 +23,7 @@ export default function Signup() {
     }
 
     return (
-        <div className="flex flex-col justify-center items-center md:p-8 w-full">
+        <div className="flex flex-col justify-center items-center md:p-8 w-full max-w-2xl m-auto">
             <h2 className="text-2xl font-bold font-[outfit] text-black mb-2 text-center">
                 SIGN UP WITH <br /> UNITED ACCOUNT
             </h2>

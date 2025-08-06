@@ -12,9 +12,19 @@ export default async function page() {
         theme3: () => import('@/components/theme3/cart-checkout/Checkout'),
     };
 
+    const BreadcrumbMap = {
+        theme1: () => import('@/components/theme1/Breadcrumb/Breadcrumb'),
+        theme2: () => import('@/components/theme2/Breadcrumb/Breadcrumb'),
+        theme3: () => import('@/components/theme3/Breadcrumb/Breadcrumb'),
+    };
+
     const Checkout = (await CheckoutMap[theme]())?.default;
+    const Breadcrumb = (await BreadcrumbMap[theme]())?.default;
 
     return (
-        <Checkout />
+        <>
+            <Breadcrumb page="Checkout" />
+            <Checkout />
+        </>
     )
 }

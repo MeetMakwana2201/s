@@ -75,7 +75,7 @@ export default function VerifyOtp() {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center md:p-8 w-full mx-auto">
+        <div className="flex flex-col justify-center items-center md:p-8 w-full max-w-2xl m-auto">
             <h2 className="text-2xl font-bold font-[outfit] text-black mb-2 text-center">VERIFY OTP</h2>
             <p className="text-base text-gray-600 mb-6 text-center">Verify OTP to continue</p>
 

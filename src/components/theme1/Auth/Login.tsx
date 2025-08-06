@@ -18,7 +18,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center md:p-8 w-full mx-auto">
+    <div className="flex flex-col justify-center items-center md:p-8 w-full max-w-2xl m-auto">
       <h2 className="text-2xl font-bold font-[outfit] text-black mb-2 text-center">
         LOG IN WITH <br /> UNITED ACCOUNT
       </h2>
