@@ -6,6 +6,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AddAddressSheet from '@/components/theme1/manu-pages/AddAddress';
 
 interface ContactInfo {
     email: string;
@@ -152,7 +153,7 @@ export default function App() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="text-lg font-medium text-gray-700">Loading checkout details...</div>
             </div>
         );
@@ -183,7 +184,7 @@ export default function App() {
                 <div>
                     <h2 className="text-xl font-black font-[outfit] mb-4 uppercase flex justify-between">
                         SHIPPING ADDRESS
-                        <button className="text-blue-600 text-sm">Add Address</button>
+                        <AddAddressSheet />
                     </h2>
                     <div className="space-y-4">
                         {shippingAddresses.map((address) => (
@@ -201,7 +202,7 @@ export default function App() {
                                     onChange={() => handleAddressChange(address.id)}
                                     className="mr-2 h-5 w-5 rounded-full border-2 border-black appearance-none  checked:border-black checked:ring-2 checked:ring-black"
                                 />
-                                <div>
+                                <div className='flex-1'>
                                     <strong>{address.type}</strong>
                                     <p>{address.addressLine1}, {address.addressLine2}</p>
                                     <p>{address.city} | {address.zip} | {address.state} | {address.country}</p>
@@ -335,7 +336,7 @@ export default function App() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-4">
+                    <div className="flex flex-col md:flex-row gap-4">
                         <Button variant="outline" className="flex-1 h-12.5 rounded-none font-semibold text-lg">
                             SHOP MORE
                         </Button>
