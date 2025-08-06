@@ -247,7 +247,7 @@ export default function App() {
             {/* Right Column */}
             <Card className="h-fit border border-black rounded-xl p-6">
                 <CardHeader className="p-0">
-                    <CardTitle className="text-lg">ORDER SUMMARY</CardTitle>
+                    <CardTitle className="text-xl font-[outfit] font-black">ORDER SUMMARY</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-0">
                     {/* Product 1 */}
