@@ -1,7 +1,5 @@
-// import Support from '@/components/Support/Support'
-import React from 'react'
+// import Support from '@/components/theme1/Support/Support'
 import { cookies } from 'next/headers';
-
 
 export default async function page() {
     type ThemeKey = 'theme1' | 'theme2' | 'theme3';
@@ -14,7 +12,7 @@ export default async function page() {
     };
 
     const Support = (await SupportMap[theme]())?.default;
-    
+
     return (
         <Support />
     )
