@@ -10,6 +10,7 @@ export default async function page() {
         theme2: () => import('@/components/theme2/Support/Support'),
         theme3: () => import('@/components/theme3/Support/Support'),
     };
+    
 
     const Support = (await SupportMap[theme]())?.default;
 
