@@ -14,19 +14,30 @@ export default async function page() {
         theme3: () => import('@/components/theme3/manu-pages/SavedAddresses'),
     };
 
-    const AddAddressMap = {
-        theme1: () => import('@/components/theme1/manu-pages/AddAddress'),
-        theme2: () => import('@/components/theme2/manu-pages/AddAddress'),
-        theme3: () => import('@/components/theme3/manu-pages/AddAddress'),
+    const BreadcrumbMap = {
+        theme1: () => import('@/components/theme1/Breadcrumb/Breadcrumb'),
+        theme2: () => import('@/components/theme2/Breadcrumb/Breadcrumb'),
+        theme3: () => import('@/components/theme3/Breadcrumb/Breadcrumb'),
     };
 
+    const ManuSidebarMap = {
+        theme1: () => import('@/components/theme1/manu-pages/ManuSidebar'),
+        theme2: () => import('@/components/theme2/manu-pages/ManuSidebar'),
+        theme3: () => import('@/components/theme3/manu-pages/ManuSidebar'),
+    };
+
+    const ManuSidebar = (await ManuSidebarMap[theme]())?.default;
+    const Breadcrumb = (await BreadcrumbMap[theme]())?.default;
     const SavedAddresses = (await SavedAddressesMap[theme]())?.default;
-    const AddAddress = (await AddAddressMap[theme]())?.default;
 
     return (
         <>
-            <SavedAddresses />
-            <AddAddress />
+            <Breadcrumb page="Saved Addresses" />
+            <div className="flex lg:min-h-screen lg:px-12.5 px-4 ">
+                <ManuSidebar active="Saved Addresses" />
+                <SavedAddresses />
+            </div>
+
         </>
     )
 }

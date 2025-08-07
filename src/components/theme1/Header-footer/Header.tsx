@@ -54,7 +54,7 @@ export default function Header() {
                         <div className="flex flex-col gap-4 px-4">
                             <Link
                                 href="/category"
-                                className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
+                                className="flex justify-between border border-[#515151] rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                             >
                                 Categories <ChevronRight className="h-4 w-4" />
                             </Link>
@@ -62,25 +62,25 @@ export default function Header() {
                                 <>
                                     <Link
                                         href="#"
-                                        className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
+                                        className="flex justify-between border border-[#515151] rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                                     >
                                         Profile <ChevronRight className="h-4 w-4" />
                                     </Link>
                                     <Link
                                         href="#"
-                                        className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
+                                        className="flex justify-between border border-[#515151] rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                                     >
                                         Saved Addresses <ChevronRight className="h-4 w-4" />
                                     </Link>
                                     <Link
                                         href="#"
-                                        className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
+                                        className="flex justify-between border border-[#515151] rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                                     >
                                         Order History <ChevronRight className="h-4 w-4" />
                                     </Link>
                                     <Link
                                         href="#"
-                                        className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
+                                        className="flex justify-between border border-[#515151] rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                                     >
                                         Support Ticket <ChevronRight className="h-4 w-4" />
                                     </Link>
@@ -121,9 +121,9 @@ export default function Header() {
                     <div className="relative group">
                         <Link href="/category" className="lg:block hidden cursor-pointer text-[16px] font-medium">Categories</Link>
 
-                        <div className="magamanu absolute top-5 -right-20 w-[800px] xl:w-[1100px] mt-4 max-h-[50dvh] overflow-y-scroll scrollbar-track-red-200 bg-white rounded-xl shadow-xl p-6 pe-3 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                        <div className="magamanu absolute top-5 -right-20 w-[800px] xl:w-[1100px] mt-4 max-h-[50dvh] overflow-y-scroll bg-white rounded-xl shadow-xl p-6 pe-3 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                             <div className="flex items-center justify-between mb-4">
-                                <h4 className="text-xl font-[outfit] uppercase font-bold">Browse Categories</h4>
+                                <p className="text-xl font-[outfit] uppercase font-bold">Browse Categories</p>
                                 <Link href="/category" className="text-sm text-[#515151] underline">
                                     View More
                                 </Link>

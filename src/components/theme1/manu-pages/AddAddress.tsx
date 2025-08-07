@@ -14,7 +14,11 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Link from "next/link";
 
-export default function AddAddressSheet() {
+interface AddAddressSheetProps {
+    manupages?: boolean;
+}
+
+export default function AddAddressSheet({ manupages }: AddAddressSheetProps) {
     const [sheetOpen, setSheetOpen] = useState(false);
     const [addressType, setAddressType] = useState("Home");
 
@@ -23,7 +27,16 @@ export default function AddAddressSheet() {
     return (
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild >
-                <Button variant="outline" className="border-black">Add Address</Button>
+                {manupages ? (
+                    <Button className="border-black rounded-none mt-6 uppercase py-4 px-20 h-12 ">
+                        Add Address
+                    </Button>
+                ) : (
+                    <Button variant="outline" className="border-black">
+                        Add Address
+                    </Button>
+                )}
+                {/* <Button variant="outline" className="border-black">Add Address</Button> */}
             </SheetTrigger>
             <SheetContent side="right" className="md:max-w-2xl max-w-full w-full">
                 <SheetHeader>

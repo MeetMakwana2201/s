@@ -184,7 +184,7 @@ export default function App() {
                 <div>
                     <h2 className="text-xl font-black font-[outfit] mb-4 uppercase flex justify-between">
                         SHIPPING ADDRESS
-                        <AddAddressSheet />
+                        <AddAddressSheet manupages={false} />
                     </h2>
                     <div className="space-y-4">
                         {shippingAddresses.map((address) => (
