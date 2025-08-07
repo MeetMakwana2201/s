@@ -21,7 +21,7 @@ export default async function OrderStatus() {
   return (
     <>
       <Breadcrumb page={OrderStatus ? "Order Placed Successfully" : "Couldn’t Complete Your Order"} />
-      <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
+      <div className="lg:min-h-screen flex flex-col items-center justify-center text-center px-4">
 
         {OrderStatus ? (
           <OrderSuccessfully />

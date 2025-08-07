@@ -22,7 +22,7 @@ import { Categories } from "@/lib/categories/CategoriesList";
 import CartSheet from "../cart-checkout/Cart";
 
 export default function Header() {
-    const [isSignIn, setIsSignIn] = useState(false);
+    const [isSignIn, setIsSignIn] = useState(true);
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false); // 🔍 toggle state
     const [searchTerm, setSearchTerm] = useState("");
@@ -64,19 +64,25 @@ export default function Header() {
                                         href="#"
                                         className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                                     >
-                                        Account <ChevronRight className="h-4 w-4" />
+                                        Profile <ChevronRight className="h-4 w-4" />
                                     </Link>
                                     <Link
                                         href="#"
                                         className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                                     >
-                                        Orders <ChevronRight className="h-4 w-4" />
+                                        Saved Addresses <ChevronRight className="h-4 w-4" />
                                     </Link>
                                     <Link
                                         href="#"
                                         className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
                                     >
-                                        Cart <ChevronRight className="h-4 w-4" />
+                                        Order History <ChevronRight className="h-4 w-4" />
+                                    </Link>
+                                    <Link
+                                        href="#"
+                                        className="flex justify-between border rounded-2xl p-4 items-center text-lg font-medium hover:text-blue-600"
+                                    >
+                                        Support Ticket <ChevronRight className="h-4 w-4" />
                                     </Link>
                                 </>
                             ) : (
