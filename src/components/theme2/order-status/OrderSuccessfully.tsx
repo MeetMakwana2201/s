@@ -1,9 +1,9 @@
 "use client";
 
 import React from 'react';
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function OrderSuccessfully() {
 
@@ -11,21 +11,21 @@ export default function OrderSuccessfully() {
 
     return (
         <>
-            <Image
-                src="/order-success.png" // Replace with actual image path
-                alt="Order Success"
-                width={120}
-                height={120}
+            <DotLottieReact
+                src="/lottie/Order-Placed-Sucessfully.json"
+                loop
+                autoplay
+                className='size-96 mx-auto'
             />
-            <h2 className="text-2xl font-black font-[outfit] mt-6 uppercase">
+            <h2 className="text-4xl font-black font-[outfit] mt-6 uppercase">
                 ORDER PLACED SUCCESSFULLY !!
             </h2>
-            <p className="text-sm mt-2 text-muted-foreground">
+            <p className="text-base mt-2 text-muted-foreground">
                 Your order has been placed and is now being processed. Continue shopping..
             </p>
             <Button
-                className="mt-6"
-                onClick={() => router.push("/shop")} // Or your actual shopping page
+                className="mt-6 cursor-pointer rounded-none py-6 px-10"
+                onClick={() => router.push("/")}
             >
                 CONTINUE SHOPPING
             </Button>

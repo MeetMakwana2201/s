@@ -7,7 +7,7 @@ export default function OfferBanner() {
 
     return (
         <section
-            className="w-full h-[300px] md:h-[400px] lg:h-[450px] xl:h-[500px] 2xl:h-[600px] 2xl:bg-cover flex items-end justify-center bg-center bg-no-repeat bg-contain relative"
+            className="w-full h-[300px] md:h-[400px] lg:h-[450px] xl:h-[500px] 2xl:h-[600px] 2xl:bg-cover flex items-end justify-center bg-center bg-no-repeat bg-cover relative"
             style={{ backgroundImage: `url(${backgroundUrl})` }}
         >
         </section>

@@ -4,7 +4,7 @@ import Image from 'next/image';
 // import { cookies } from 'next/headers';
 import { Button } from '@/components/ui/button';
 import { getProductBySlug } from '@/lib/Products/ProductDetails';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 // import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 // import { SizeChartPopup } from '@/components/popups/SizeChart';
@@ -52,18 +52,29 @@ export default function ProductDetailPage() {
 
   const theme = Cookies.get('theme') || 'default';
 
-
-
-  const Breadcrumb = dynamic<BreadcrumbProps>(() =>
-    import(`@/components/${theme}/Breadcrumb/Breadcrumb`)
+  const Breadcrumb = useMemo(
+    () =>
+      dynamic<BreadcrumbProps>(() =>
+        import(`@/components/${theme}/Breadcrumb/Breadcrumb`)
+      ),
+    [theme]
   );
+
+  // const Breadcrumb = dynamic<BreadcrumbProps>(() =>
+  //   import(`@/components/${theme}/Breadcrumb/Breadcrumb`)
+  // );
+
   const sizeChartMap: Record<string, () => Promise<{ default: React.ComponentType<SizeChartPopupProps> }>> = {
     theme1: () => import('@/components/theme1/Popups/SizeChart'),
     theme2: () => import('@/components/theme2/Popups/SizeChart'),
     theme3: () => import('@/components/theme3/Popups/SizeChart'),
   };
 
-  const SizeChartPopup = dynamic<SizeChartPopupProps>(sizeChartMap[theme] ?? sizeChartMap['theme1']);
+  const SizeChartPopup = useMemo(
+    () => dynamic<SizeChartPopupProps>(sizeChartMap[theme] ?? sizeChartMap['theme1']),
+    [theme]
+  );
+  // const SizeChartPopup = dynamic<SizeChartPopupProps>(sizeChartMap[theme] ?? sizeChartMap['theme1']);
 
 
   useEffect(() => {
@@ -113,6 +124,9 @@ export default function ProductDetailPage() {
     setSelectedSize(size);
   };
 
+  // console.log(product);
+  // console.log(selectedImage);
+
   if (!product || !selectedImage) {
     return <p className="text-center text-muted-foreground">Loading product...</p>;
   }
@@ -120,10 +134,12 @@ export default function ProductDetailPage() {
   return (
     <div className="px-4 xl:px-12 mx-auto pt-24 ">
 
+      <Breadcrumb category={product.category} productName={product.name} />
 
-      <main className="grid md:grid-cols-2 gap-10 items-center">
+
+      <main className="grid lg:grid-cols-2 gap-10 items-center w-full">
         {/* LEFT IMAGE BLOCK */}
-        <div>
+        <div className="w-full">
           {/* Main Image */}
           <div className="relative w-full aspect-square mb-4">
             <Image
@@ -178,7 +194,7 @@ export default function ProductDetailPage() {
           {/* COLORS */}
           <div>
             <p className="font-extrabold mb-2 text-xl font-[outfit]">Colors</p>
-            <div className="flex gap-4 mt-4">
+            <div className="flex gap-4 mt-4 flex-wrap">
               {product.colors.map((color) => (
                 <button
                   key={color.name}
@@ -254,12 +270,12 @@ export default function ProductDetailPage() {
           </div>
 
           { /* add for look like center */}
-          <div className='h-25'>
+          <div className='h-25 lg:block hidden'>
 
           </div>
         </div>
       </main>
-      <div className="mt-20">
+      <div className="lg:mt-20">
         <h2 className="text-2xl lg:text-4xl font-[outfit] font-bold mb-6 uppercase">Product Description</h2>
         <p>
           {product.description}

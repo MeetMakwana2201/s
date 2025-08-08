@@ -7,14 +7,14 @@ import { footerData } from '@/lib/Header-Footer/Footer';
 
 export default function Footer() {
     return (
-        <footer className="bg-white text-black py-4 px-6 md:px-12 border-t">
+        <footer className="bg-white text-black py-4 px-6 md:px-12">
             <div className='flex justify-between flex-wrap mb-6'>
                 <Image
                     src={`/images/${footerData.logo}`}
                     alt={footerData.brandName}
                     width={251} height={81}
                 />
-                <div className='flex sm:items-center md:justify-center flex-wrap gap-2.5'>
+                <div className='flex items-center md:justify-center flex-wrap gap-2.5'>
                     <p className="text-base font-medium mb-0 ">Download Our Apps From</p>
                     <div className="flex gap-2">
                         <Image src="/images/playstore.png" className='rounded-lg hover:opacity-80' alt="Play Store" width={40} height={40} />

@@ -10,7 +10,7 @@ type BreadcrumbProps = {
 
 export default function Breadcrumb({ category, productName, page }: BreadcrumbProps) {
     return (
-        <nav aria-label="breadcrumb" className="mb-4 text-lg text-muted-foreground">
+        <nav aria-label="breadcrumb" className="mb-4 lg:mt-25 mt-20 lg:px-12.5 px-3 text-lg text-muted-foreground">
             <ol className="flex items-center space-x-1">
                 {/* Home */}
                 <li>
@@ -41,7 +41,7 @@ export default function Breadcrumb({ category, productName, page }: BreadcrumbPr
                 {page && (
                     <>
                         <Arrow />
-                        <li className="capitalize">{page}</li>
+                        <li className="capitalize text-primary">{page}</li>
                     </>
                 )}
             </ol>
