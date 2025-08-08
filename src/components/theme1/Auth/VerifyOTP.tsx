@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
-import { cn } from '@/lib/utils'
+// import { cn } from '@/lib/utils'
 import React, { useEffect, useState } from 'react'
 
 export default function VerifyOtp() {
