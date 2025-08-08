@@ -19,9 +19,11 @@ export default async function page() {
   const Categories = (await import(`@/components/${theme}/Categories/CategoriesSlider`)).default;
   const CallToAction = (await import(`@/components/${theme}/call-to-action/CallToAction`)).default;
   const LatestProducts = (await import(`@/components/${theme}/Products/LatestProducts`)).default;
+  const OfferPopup = (await import(`@/components/${theme}/Popups/OfferPopup`)).default;
 
   return (
     <div>
+      <OfferPopup />
       <HomeHero />
       <Categories />
       <OfferSection />
