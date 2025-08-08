@@ -14,7 +14,7 @@ export default function Hero() {
                 backgroundPosition: "center",
             }}
         >
-            <div className="container px-4 absolute bottom-10 left-1/2 transform -translate-x-1/2 w-full">
+            <div className="px-4 flex justify-center items-center w-full h-full">
                 {/* Text Content */}
                 <div className="w-full text-center">
                     <h1 className="text-2xl md:text-3xl font-[outfit] lg:text-6xl font-bold text-black">
